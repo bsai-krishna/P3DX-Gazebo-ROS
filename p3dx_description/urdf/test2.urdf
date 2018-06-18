@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<robot name="pioneer3dx" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- properties (constants) -->
+  <property name="ns" value="p3dx" />
+  <!-- properties (constants) -->
+  <property name="M_PI" value="3.14159" />
+
+
+
+
+
+        <!-- chassis -->
+	<link name="base_link">
+		<inertial>
+			<mass value="3.5" />
+			<!--<origin xyz="-0.025 0 -0.223"/> -->
+			<origin xyz="-0.05 0 0" />
+			<inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+		</inertial>
+
+		<visual>
+			<origin xyz="-0.045 0 0.148" rpy="0 0 0" />
+			<geometry name="pioneer_geom">
+				<mesh filename="package://p3dx_description/meshes/chassis.stl" />
+			</geometry>
+			<material name="Red">
+				<color rgba="1 0.0 0.0 1.0" />
+			</material>
+		</visual>
+
+		<collision>
+			<origin xyz="-0.045 0 0.145" rpy="0 0 0" />
+			<geometry>
+				<box size="0.35 0.25 0.14" />
+			</geometry>
+		</collision>
+	</link>
+	<!-- top_plate -->
+	<link name="top_plate">
+		<inertial>
+			<mass value="0.01" />
+			<origin xyz="0 0 0" />
+			<inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+		</inertial>
+
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry name="top_geom">
+				<mesh filename="package://p3dx_description/meshes/top.stl" />
+			</geometry>
+
+			<material name="Black">
+				<color rgba="0.038 0.038 0.038 1.0" />
+			</material>
+		</visual>
+
+		<collision>
+			<origin xyz="0.0 0 0" rpy="0 0 0" />
+			<geometry name="pioneer_geom">
+				<box size="0.45 0.38 0.01" />
+			</geometry>
+		</collision>
+	</link>
+
+	<joint name="base_top_joint" type="fixed">
+		<origin xyz="-0.045 0 0.234" rpy="0 0 0" />
+		<parent link="base_link" />
+		<child link="top_plate" />
+	</joint>
+  <gazebo reference="top_plate">
+    <material>Gazebo/Black</material>
+  </gazebo>
+
+
+
+
+    
+
+      
+ 
+ 
+  <!-- ros_control plugin -->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/${ns}</robotNamespace>
+    </plugin>
+  </gazebo>
+
+<!-- differential drive -->
+	<gazebo>
+        <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+            <rosDebugLevel>Debug</rosDebugLevel>
+            <robotNamespace></robotNamespace>
+            <publishWheelTF>false</publishWheelTF>
+            <publishWheelJointState>true</publishWheelJointState>
+            <alwaysOn>true</alwaysOn>
+            <leftJoint>left_hub_joint</leftJoint>
+            <rightJoint>right_hub_joint</rightJoint>
+            <wheelSeparation>0.3</wheelSeparation>
+            <wheelDiameter>0.18</wheelDiameter>
+            <wheelTorque>20</wheelTorque>
+            <wheelAcceleration>1.8</wheelAcceleration>
+            <commandTopic>cmd_vel</commandTopic>
+            <odometryTopic>odom</odometryTopic>
+            <odometryFrame>odom</odometryFrame>
+            <odometrySource>world</odometrySource>
+            <robotBaseFrame>base_link</robotBaseFrame>
+            <updateRate>10.0</updateRate>
+	    <legacyMode>true</legacyMode>
+        </plugin>
+
+	</gazebo>
+
+  <!-- ground truth -->
+	<gazebo>
+		<plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
+			<alwaysOn>true</alwaysOn>
+			<updateRate>100.0</updateRate>
+			<bodyName>base_link</bodyName>
+			<topicName>${ns}/base_pose_ground_truth</topicName>
+			<gaussianNoise>0.01</gaussianNoise>
+			<frameName>map</frameName>
+			<!-- initialize odometry for fake localization -->
+			<xyzOffsets>0 0 0</xyzOffsets>
+			<rpyOffsets>0 0 0</rpyOffsets>
+		</plugin>
+	</gazebo>
+
+			<gazebo reference="base_link">
+				<material>Gazebo/Red</material>
+			</gazebo>
+			<gazebo reference="p3dx_right_hubcap">
+					<material>Gazebo/Yellow</material>
+			</gazebo>
+			<gazebo reference="p3dx_right_wheel">
+				<material>Gazebo/Black</material>
+				<mu1>0.5</mu1>
+				<mu2>50.0</mu2>
+				<kp>100000000.0</kp>
+				<kd>1.0</kd>
+			</gazebo>
+			<gazebo reference="p3dx_left_hubcap">
+				<material>Gazebo/Yellow</material>
+			</gazebo>
+
+			<gazebo reference="p3dx_left_wheel">
+				<material>Gazebo/Black</material>
+				<mu1>0.5</mu1>
+				<mu2>50.0</mu2>
+				<kp>100000000.0</kp>
+				<kd>1.0</kd>
+			</gazebo>
+	
+
+
+</robot>

@@ -1,0 +1,35 @@
+digraph G {
+node [shape=box];
+"base_link" [label="base_link"];
+"front_sonar" [label="front_sonar"];
+"p3dx_left_wheel" [label="p3dx_left_wheel"];
+"p3dx_left_hubcap" [label="p3dx_left_hubcap"];
+"p3dx_right_wheel" [label="p3dx_right_wheel"];
+"p3dx_right_hubcap" [label="p3dx_right_hubcap"];
+"swivel" [label="swivel"];
+"center_wheel" [label="center_wheel"];
+"center_hubcap" [label="center_hubcap"];
+"top_plate" [label="top_plate"];
+"lms100" [label="lms100"];
+node [shape=ellipse, color=blue, fontcolor=blue];
+"base_link" -> "base_front_joint" [label="xyz: 0.109 0 0.209 \nrpy: 0 -0 0"]
+"base_front_joint" -> "front_sonar"
+"base_link" -> "base_left_wheel_joint" [label="xyz: 0 0.158 0.091 \nrpy: 0 -0 0"]
+"base_left_wheel_joint" -> "p3dx_left_wheel"
+"p3dx_left_wheel" -> "base_left_hubcap_joint" [label="xyz: 0 0 0 \nrpy: 0 -0 0"]
+"base_left_hubcap_joint" -> "p3dx_left_hubcap"
+"base_link" -> "base_right_wheel_joint" [label="xyz: 0 -0.158 0.091 \nrpy: 0 -0 0"]
+"base_right_wheel_joint" -> "p3dx_right_wheel"
+"p3dx_right_wheel" -> "base_right_hubcap_joint" [label="xyz: 0 0 0 \nrpy: 0 -0 0"]
+"base_right_hubcap_joint" -> "p3dx_right_hubcap"
+"base_link" -> "base_swivel_joint" [label="xyz: -0.185 0 0.055 \nrpy: 0 -0 0"]
+"base_swivel_joint" -> "swivel"
+"swivel" -> "swivel_hubcap_joint" [label="xyz: -0.026 0 -0.016 \nrpy: 0 -0 0"]
+"swivel_hubcap_joint" -> "center_wheel"
+"center_wheel" -> "center_wheel_joint" [label="xyz: -0.0035 0 -0.001 \nrpy: 0 -0 0"]
+"center_wheel_joint" -> "center_hubcap"
+"base_link" -> "base_top_joint" [label="xyz: -0.045 0 0.234 \nrpy: 0 -0 0"]
+"base_top_joint" -> "top_plate"
+"base_link" -> "lms100_joint" [label="xyz: 0.16 0 0.15 \nrpy: 0 -0 0"]
+"lms100_joint" -> "lms100"
+}
